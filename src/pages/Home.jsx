@@ -94,6 +94,11 @@ export default function Home() {
     setViewingLetter(letter);
   };
 
+  const isLetterUnlocked = (letter) => {
+    // Letters without passwords are freely accessible
+    return !letter.password || unlockIds.includes(letter.id);
+  };
+
   const handleGoogleSignIn = () => {
     base44.auth.loginWithProvider('google', window.location.href);
   };
@@ -212,7 +217,7 @@ export default function Home() {
               >
                 <LetterCard
                   letter={letter}
-                  isUnlocked={unlockIds.includes(letter.id)}
+                  isUnlocked={isLetterUnlocked(letter)}
                   onClick={() => handleCardClick(letter)}
                 />
               </motion.div>
@@ -260,7 +265,7 @@ export default function Home() {
         {viewingLetter && (
           <LetterViewer
             letter={viewingLetter}
-            isUnlocked={unlockIds.includes(viewingLetter.id)}
+            isUnlocked={isLetterUnlocked(viewingLetter)}
             onClose={() => setViewingLetter(null)}
             onUnlock={handleUnlock}
           />

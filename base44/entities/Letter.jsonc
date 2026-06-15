@@ -12,7 +12,7 @@
     },
     "password": {
       "type": "string",
-      "description": "The password players must guess to unlock"
+      "description": "The password players must guess to unlock (optional for uncensored-only letters)"
     },
     "password_hint": {
       "type": "string",
@@ -43,7 +43,6 @@
     }
   },
   "required": [
-    "title",
-    "password"
+    "title"
   ]
 }

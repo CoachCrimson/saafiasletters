@@ -60,7 +60,7 @@ export default function LetterViewer({ letter, isUnlocked, onClose, onUnlock }) 
               {showUncensored ? 'Uncensored' : 'Censored'}
             </Button>
           )}
-          {!isUnlocked && (
+          {!isUnlocked && letter.password && (
             <Button
               variant="outline"
               size="sm"
@@ -132,7 +132,7 @@ export default function LetterViewer({ letter, isUnlocked, onClose, onUnlock }) 
 
       {/* Unlock overlay */}
       <AnimatePresence>
-        {showUnlock && !isUnlocked && (
+      {showUnlock && !isUnlocked && letter.password && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

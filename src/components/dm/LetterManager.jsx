@@ -62,8 +62,8 @@ export default function LetterManager({ letter, onDone }) {
   };
 
   const handleSave = () => {
-    if (!form.title || !form.password) {
-      toast.error('Title and password are required');
+    if (!form.title) {
+      toast.error('Title is required');
       return;
     }
     saveMutation.mutate(form);

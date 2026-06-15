@@ -61,9 +61,13 @@ export default function LetterCard({ letter, isUnlocked, onClick }) {
               <span className="text-xs text-primary flex items-center gap-1">
                 <Eye className="w-3 h-3" /> Read
               </span>
-            ) : (
+            ) : letter.password ? (
               <span className="text-xs text-muted-foreground flex items-center gap-1">
                 <Lock className="w-3 h-3" /> Locked
+              </span>
+            ) : (
+              <span className="text-xs text-primary flex items-center gap-1">
+                <Eye className="w-3 h-3" /> Read
               </span>
             )}
             {letter.censored_pages && (
