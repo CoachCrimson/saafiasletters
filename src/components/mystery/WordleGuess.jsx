@@ -46,6 +46,21 @@ export default function WordleGuess({ password, onUnlock, maxAttempts = 6 }) {
   const inputRef = useRef(null);
   const passwordLen = password.length;
 
+  // Dynamically size cells based on password length
+  const cellSize = passwordLen <= 6
+    ? 'w-11 h-11 sm:w-14 sm:h-14'
+    : passwordLen <= 8
+    ? 'w-10 h-10 sm:w-12 sm:h-12'
+    : passwordLen <= 10
+    ? 'w-8 h-8 sm:w-10 sm:h-10'
+    : 'w-7 h-7 sm:w-9 sm:h-9';
+  const cellText = passwordLen <= 6
+    ? 'text-base sm:text-lg'
+    : passwordLen <= 8
+    ? 'text-sm sm:text-base'
+    : 'text-xs sm:text-sm';
+  const cellGap = passwordLen <= 6 ? 'gap-2' : passwordLen <= 8 ? 'gap-1.5' : 'gap-1';
+
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -104,14 +119,14 @@ export default function WordleGuess({ password, onUnlock, maxAttempts = 6 }) {
         {guesses.map((guess, gi) => (
           <motion.div
             key={gi}
-            className="flex gap-1.5"
+            className={`flex ${cellGap}`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {guess.word.split('').map((letter, li) => (
               <motion.div
                 key={li}
-                className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-md border-2 font-heading text-sm sm:text-base font-bold uppercase ${CELL_COLORS[guess.states[li]]}`}
+                className={`${cellSize} ${cellText} flex items-center justify-center rounded-md border-2 font-heading font-bold uppercase ${CELL_COLORS[guess.states[li]]}`}
                 initial={{ rotateX: 90 }}
                 animate={{ rotateX: 0 }}
                 transition={{ delay: li * 0.1, duration: 0.3 }}
@@ -125,14 +140,14 @@ export default function WordleGuess({ password, onUnlock, maxAttempts = 6 }) {
         {/* Current guess row */}
         {!isComplete && !isExhausted && (
           <motion.div
-            className={`flex gap-1.5 ${shakeRow ? 'animate-shake' : ''}`}
+            className={`flex ${cellGap} ${shakeRow ? 'animate-shake' : ''}`}
             animate={shakeRow ? { x: [0, -10, 10, -10, 10, 0] } : {}}
             transition={{ duration: 0.4 }}
           >
             {Array.from({ length: passwordLen }).map((_, i) => (
               <div
                 key={i}
-                className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-md border-2 font-heading text-sm sm:text-base font-bold uppercase transition-all ${
+                className={`${cellSize} ${cellText} flex items-center justify-center rounded-md border-2 font-heading font-bold uppercase transition-all ${
                   i < currentGuess.length ? CELL_COLORS.active : CELL_COLORS.empty
                 }`}
               >
@@ -144,11 +159,11 @@ export default function WordleGuess({ password, onUnlock, maxAttempts = 6 }) {
 
         {/* Empty remaining rows */}
         {Array.from({ length: Math.max(0, maxAttempts - guesses.length - (isComplete || isExhausted ? 0 : 1)) }).map((_, ri) => (
-          <div key={ri} className="flex gap-1.5">
+          <div key={ri} className={`flex ${cellGap}`}>
             {Array.from({ length: passwordLen }).map((_, ci) => (
               <div
                 key={ci}
-                className={`w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-md border-2 ${CELL_COLORS.empty} opacity-30`}
+                className={`${cellSize} flex items-center justify-center rounded-md border-2 ${CELL_COLORS.empty} opacity-30`}
               />
             ))}
           </div>

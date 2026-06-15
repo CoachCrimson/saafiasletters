@@ -17,12 +17,12 @@ export default function LetterCard({ letter, isUnlocked, onClick }) {
           : 'border-border bg-card/60 hover:border-accent/40'
       }`}>
         {/* Thumbnail */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden">
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-background/50 flex items-center justify-center">
           {letter.censored_pages?.[0] ? (
             <img
               src={letter.censored_pages[0]}
               alt={letter.title}
-              className={`w-full h-full object-cover transition-all duration-700 ${
+              className={`w-full h-full object-contain transition-all duration-700 ${
                 isUnlocked ? '' : 'blur-xl brightness-50 scale-110'
               }`}
             />
