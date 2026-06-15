@@ -1,0 +1,17 @@
+{
+  "name": "LetterUnlock",
+  "type": "object",
+  "properties": {
+    "letter_id": {
+      "type": "string",
+      "description": "ID of the unlocked letter"
+    },
+    "unlock_code": {
+      "type": "string",
+      "description": "Shared unlock code so all players see unlocked state"
+    }
+  },
+  "required": [
+    "letter_id"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Letter",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the letter entry (e.g. 'Letter I - The Descent')"
+    },
+    "letter_number": {
+      "type": "number",
+      "description": "Order number for sorting"
+    },
+    "password": {
+      "type": "string",
+      "description": "The password players must guess to unlock"
+    },
+    "password_hint": {
+      "type": "string",
+      "description": "Optional hint for the password"
+    },
+    "censored_pages": {
+      "type": "array",
+      "description": "Array of censored page image URLs",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uncensored_pages": {
+      "type": "array",
+      "description": "Array of uncensored page image URLs",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this letter is visible to players"
+    },
+    "date_in_world": {
+      "type": "string",
+      "description": "In-world date for the letter"
+    }
+  },
+  "required": [
+    "title",
+    "password"
+  ]
+}
