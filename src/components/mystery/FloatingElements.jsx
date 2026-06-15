@@ -1,63 +1,95 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
-const BUTTERFLY_SVG = (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-    <path d="M12 2C12 2 8 6 4 8C2 9 1 11 2 13C3 15 5 15 7 14C9 13 11 10 12 8C13 10 15 13 17 14C19 15 21 15 22 13C23 11 22 9 20 8C16 6 12 2 12 2Z" />
-  </svg>
-);
+function Butterfly() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M12 12C10 8 6 4 6 4C6 4 4 8 4 10C4 12 6 14 12 19C18 14 20 12 20 10C20 8 18 4 18 4C18 4 14 8 12 12Z" fill="currentColor" opacity="0.6" />
+      <path d="M12 12L12 19" stroke="currentColor" strokeWidth="0.5" opacity="0.8" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" opacity="0.9" />
+    </svg>
+  );
+}
 
-const FEATHER_SVG = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="w-full h-full">
-    <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5l6.74-6.76zM16 8L2 22M17.5 15H9" />
-  </svg>
-);
+function Feather() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M6 22C6 22 10 14 12 12C14 10 18 4 18 4C18 4 14 10 12 12C10 14 6 22 6 22Z" fill="currentColor" opacity="0.5" />
+      <path d="M12 12L18 4" stroke="currentColor" strokeWidth="0.5" opacity="0.6" />
+      <path d="M11 14L6 22" stroke="currentColor" strokeWidth="0.3" opacity="0.4" />
+    </svg>
+  );
+}
 
-const RAVEN_SVG = (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-    <path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44c-.32-.17-.53-.5-.53-.88v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L5 8.09v7.82l7 3.94 7-3.94V8.09l-7-3.94z" />
-    <path d="M12 12L5 8l7-4 7 4-7 4z" />
-    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-  </svg>
-);
+function Raven() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M12 4C10 4 8 2 8 2C8 2 6 4 8 8C10 6 12 6 12 6C12 6 14 6 16 8C18 4 16 2 16 2C16 2 14 4 12 4Z" fill="currentColor" opacity="0.5" />
+      <path d="M8 8C6 10 4 12 4 12C4 12 5 10 6 10C7 10 8 9 8 8Z" fill="currentColor" opacity="0.4" />
+      <path d="M16 8C18 10 20 12 20 12C20 12 19 10 18 10C17 10 16 9 16 8Z" fill="currentColor" opacity="0.4" />
+      <path d="M12 6L12 4" stroke="currentColor" strokeWidth="0.3" opacity="0.5" />
+    </svg>
+  );
+}
+
+// Pre-built elements pool
+const TYPES = ['butterfly', 'feather', 'raven'];
+
+function generateElements() {
+  // More elements, more variety
+  const count = 15;
+  const elements = [];
+  for (let i = 0; i < count; i++) {
+    const type = TYPES[Math.floor(Math.random() * TYPES.length)];
+    const size = type === 'raven' 
+      ? 28 + Math.random() * 24 
+      : type === 'butterfly' 
+        ? 18 + Math.random() * 22 
+        : 12 + Math.random() * 20;
+    const left = Math.random() * 95;
+    const duration = type === 'raven' 
+      ? 10 + Math.random() * 14 
+      : type === 'butterfly' 
+        ? 7 + Math.random() * 12 
+        : 10 + Math.random() * 18;
+    const delay = Math.random() * duration;
+    const driftDelay = Math.random() * 6;
+    
+    elements.push({
+      id: i,
+      type,
+      size,
+      left,
+      duration,
+      delay,
+      driftDelay,
+      opacity: 0.15 + Math.random() * 0.25,
+    });
+  }
+  return elements;
+}
 
 export default function FloatingElements() {
-  const [elements, setElements] = useState([]);
-
-  useEffect(() => {
-    const types = ['butterfly', 'butterfly', 'feather', 'feather', 'raven', 'raven'];
-    const items = [];
-    for (let i = 0; i < 12; i++) {
-      items.push({
-        id: i,
-        type: types[i % types.length],
-        left: Math.random() * 100,
-        delay: Math.random() * 12,
-        duration: 12 + Math.random() * 18,
-        size: i >= 8 ? 20 + Math.random() * 24 : 12 + Math.random() * 16,
-      });
-    }
-    setElements(items);
-  }, []);
+  const elements = useMemo(() => generateElements(), []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       {elements.map((el) => (
         <div
           key={el.id}
-          className={`absolute ${el.type === 'raven' ? 'text-foreground/15' : 'text-primary/20'}`}
+          className="absolute"
           style={{
             left: `${el.left}%`,
-            top: '-20px',
-            width: `${el.size}px`,
-            height: `${el.size}px`,
-            animation: el.type === 'feather'
-              ? `feather-fall ${el.duration}s linear ${el.delay}s infinite`
-              : el.type === 'raven'
-              ? `float-raven ${el.duration}s ease-in-out ${el.delay}s infinite`
-              : `float-butterfly ${el.duration}s ease-in-out ${el.delay}s infinite`,
+            top: '-10%',
+            width: el.size,
+            height: el.size,
+            opacity: el.opacity,
+            animation: `float-raven ${el.duration}s ${el.delay}s ease-in-out infinite, drift ${el.driftDelay + 3}s ${el.delay + 1}s ease-in-out infinite`,
+            color: el.type === 'butterfly' ? '#c4b5fd' : el.type === 'raven' ? '#94a3b8' : '#d4c5a9',
           }}
         >
-          {el.type === 'butterfly' ? BUTTERFLY_SVG : el.type === 'raven' ? RAVEN_SVG : FEATHER_SVG}
+          {el.type === 'butterfly' && <Butterfly />}
+          {el.type === 'feather' && <Feather />}
+          {el.type === 'raven' && <Raven />}
         </div>
       ))}
     </div>
