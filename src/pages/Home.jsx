@@ -9,9 +9,11 @@ import { useAuth } from '@/lib/AuthContext';
 import FloatingElements from '@/components/mystery/FloatingElements';
 import LetterCard from '@/components/mystery/LetterCard';
 import LetterViewer from '@/components/mystery/LetterViewer';
+import StorySection from '@/components/mystery/StorySection';
+import CharacterInfo from '@/components/mystery/CharacterInfo';
+import ArtGallery from '@/components/mystery/ArtGallery';
 import GoogleIcon from '@/components/GoogleIcon';
 
-const SAAFIA_ART = 'https://media.base44.com/images/public/user_6a035c071ec04324a442b3a2/e91ecdce5_Csaafia.png';
 const SAAFIA_EYES = 'https://media.base44.com/images/public/user_6a035c071ec04324a442b3a2/4f81d4bb8_IMG_9782.png';
 const SAAFIA_BUTTERFLY = 'https://media.base44.com/images/public/user_6a035c071ec04324a442b3a2/3df6d9099_xCrimson_SM_tr.png';
 
@@ -35,6 +37,21 @@ export default function Home() {
     queryKey: ['unlocks'],
     queryFn: () => base44.entities.LetterUnlock.list(),
     enabled: isAuthenticated,
+  });
+
+  const { data: stories = [] } = useQuery({
+    queryKey: ['stories'],
+    queryFn: () => base44.entities.Story.list('order'),
+  });
+
+  const { data: characters = [] } = useQuery({
+    queryKey: ['characters'],
+    queryFn: () => base44.entities.Character.list('order'),
+  });
+
+  const { data: art = [] } = useQuery({
+    queryKey: ['art'],
+    queryFn: () => base44.entities.Art.list('order'),
   });
 
   // Merge server unlocks with local
@@ -200,10 +217,18 @@ export default function Home() {
         )}
       </main>
 
-      {/* Saafia art decoration */}
-      <div className="hidden lg:block fixed bottom-0 right-0 w-72 opacity-10 pointer-events-none">
-        <img src={SAAFIA_ART} alt="" className="w-full" />
-      </div>
+      {/* Milestone Stories */}
+      <StorySection
+        stories={stories}
+        unlockCount={unlockIds.length}
+        totalLetters={publishedLetters.length}
+      />
+
+      {/* Character Info */}
+      <CharacterInfo characters={characters} />
+
+      {/* Art Gallery */}
+      <ArtGallery art={art} />
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/30 py-6 text-center">

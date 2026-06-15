@@ -1,0 +1,31 @@
+{
+  "name": "Art",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the artwork"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "High resolution art image URL"
+    },
+    "character_name": {
+      "type": "string",
+      "description": "Character this art depicts (e.g. Saafia Blarod, Rubis Blarod)"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show in featured section?"
+    },
+    "order": {
+      "type": "number",
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "title",
+    "image_url"
+  ]
+}

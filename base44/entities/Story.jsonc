@@ -1,0 +1,33 @@
+{
+  "name": "Story",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the story milestone"
+    },
+    "content": {
+      "type": "string",
+      "description": "Rich text content of the story"
+    },
+    "required_unlock_count": {
+      "type": "number",
+      "description": "Number of letters needed to unlock this story",
+      "default": 1
+    },
+    "is_reveal": {
+      "type": "boolean",
+      "default": false,
+      "description": "Is this the final Saafia Blarod identity reveal?"
+    },
+    "order": {
+      "type": "number",
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "required_unlock_count"
+  ]
+}

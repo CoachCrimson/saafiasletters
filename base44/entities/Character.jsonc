@@ -1,0 +1,29 @@
+{
+  "name": "Character",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Character name"
+    },
+    "role_label": {
+      "type": "string",
+      "description": "Short label like 'The Heiress' or 'The Brother'"
+    },
+    "description": {
+      "type": "string",
+      "description": "Character background and information"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Character portrait URL"
+    },
+    "order": {
+      "type": "number",
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

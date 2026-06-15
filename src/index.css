@@ -102,6 +102,13 @@
   50% { transform: translateY(-15px) rotate(3deg); }
 }
 
+@keyframes float-raven {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.15; }
+  25% { transform: translateY(-60px) translateX(40px) rotate(3deg); opacity: 0.35; }
+  50% { transform: translateY(-30px) translateX(-30px) rotate(-2deg); opacity: 0.2; }
+  75% { transform: translateY(-80px) translateX(60px) rotate(5deg); opacity: 0.4; }
+}
+
 @keyframes feather-fall {
   0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
   20% { opacity: 0.6; }
@@ -118,4 +125,8 @@
 
 .animate-feather-fall {
   animation: feather-fall 15s linear infinite;
+}
+
+.animate-float-raven {
+  animation: float-raven 8s ease-in-out infinite;
 }

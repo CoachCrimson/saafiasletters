@@ -8,6 +8,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import Home from '@/pages/Home';
 import DMTools from '@/pages/DMTools';
+import BackgroundMusic from '@/components/mystery/BackgroundMusic';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -60,6 +61,7 @@ function App() {
         <Router>
           <ScrollToTop />
           <AuthenticatedApp />
+          <BackgroundMusic />
         </Router>
         <Toaster />
       </QueryClientProvider>
