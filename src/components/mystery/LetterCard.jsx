@@ -22,25 +22,11 @@ export default function LetterCard({ letter, isUnlocked, onClick }) {
             <img
               src={letter.censored_pages[0]}
               alt={letter.title}
-              className={`w-full h-full object-contain transition-all duration-700 ${
-                isUnlocked ? '' : 'blur-lg brightness-[0.35] scale-110 sepia-[0.3]'
-              }`}
+              className="w-full h-full object-contain transition-all duration-700"
             />
           ) : (
             <div className="w-full h-full bg-muted flex items-center justify-center">
               <ScrollText className="w-12 h-12 text-muted-foreground/30" />
-            </div>
-          )}
-
-          {/* Subtle lock indicator for sealed cards */}
-          {!isUnlocked && letter.censored_pages?.[0] && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <motion.div
-                animate={{ y: [0, -4, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <Lock className="w-8 h-8 text-foreground/25 drop-shadow-lg" />
-              </motion.div>
             </div>
           )}
 
