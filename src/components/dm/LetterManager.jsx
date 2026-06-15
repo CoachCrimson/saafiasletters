@@ -38,6 +38,9 @@ export default function LetterManager({ letter, onDone }) {
       toast.success(isEdit ? 'Letter updated' : 'Letter created');
       onDone();
     },
+    onError: (error) => {
+      toast.error(error?.message || 'Failed to save letter');
+    },
   });
 
   const handleUpload = async (type, files) => {
@@ -85,8 +88,8 @@ export default function LetterManager({ letter, onDone }) {
             <Input type="number" value={form.letter_number} onChange={e => setForm(p => ({ ...p, letter_number: Number(e.target.value) }))} className="bg-muted/50" />
           </div>
           <div className="space-y-2">
-            <Label className="font-heading text-xs uppercase tracking-wider">Password</Label>
-            <Input value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} placeholder="Secret word" className="bg-muted/50" />
+            <Label className="font-heading text-xs uppercase tracking-wider">Password (optional — leave blank for freely readable letters)</Label>
+            <Input value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} placeholder="Leave empty if no lock needed" className="bg-muted/50" />
           </div>
           <div className="space-y-2">
             <Label className="font-heading text-xs uppercase tracking-wider">In-World Date</Label>

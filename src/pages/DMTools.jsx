@@ -166,7 +166,7 @@ function DMDashboard() {
                     {tab === 'letters' && (
                       <>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Password: <code className="bg-muted px-1.5 py-0.5 rounded text-primary text-[11px]">{item.password}</code>
+                          Password: <code className="bg-muted px-1.5 py-0.5 rounded text-primary text-[11px]">{item.password || 'none'}</code>
                           <Badge variant={item.is_published ? 'default' : 'secondary'} className="text-[10px] ml-2">
                             {item.is_published ? 'Published' : 'Draft'}
                           </Badge>
