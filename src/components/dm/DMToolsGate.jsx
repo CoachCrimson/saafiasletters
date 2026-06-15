@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Shield, KeyRound, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const DM_PASSWORD = 'nethdria_dm_2024';
+const DM_PASSWORD = 'chicku7';
 
 export default function DMToolsGate({ children }) {
   const [authenticated, setAuthenticated] = useState(false);
