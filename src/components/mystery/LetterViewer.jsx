@@ -2,16 +2,25 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { ChevronLeft, ChevronRight, X, ZoomIn, Download, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ZoomIn, Download, BookOpen, KeyRound } from 'lucide-react';
+import WordleGuess from './WordleGuess';
 
-export default function LetterViewer({ letter, isUnlocked, onClose }) {
+export default function LetterViewer({ letter, isUnlocked, onClose, onUnlock }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [showUncensored, setShowUncensored] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [showUnlock, setShowUnlock] = useState(false);
 
-  const pages = showUncensored && isUnlocked
+  const effectiveUncensored = isUnlocked && showUncensored;
+
+  const pages = effectiveUncensored
     ? letter.uncensored_pages || letter.censored_pages || []
     : letter.censored_pages || [];
+
+  const handleUnlock = () => {
+    setShowUnlock(false);
+    onUnlock(letter);
+  };
 
   const totalPages = pages.length;
 
@@ -49,6 +58,17 @@ export default function LetterViewer({ letter, isUnlocked, onClose }) {
             >
               <BookOpen className="w-3.5 h-3.5 mr-1" />
               {showUncensored ? 'Uncensored' : 'Censored'}
+            </Button>
+          )}
+          {!isUnlocked && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowUnlock(true)}
+              className="text-xs font-heading uppercase tracking-wider border-amber-600/40 text-amber-400 hover:bg-amber-600/10"
+            >
+              <KeyRound className="w-3.5 h-3.5 mr-1" />
+              Decipher
             </Button>
           )}
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -107,6 +127,51 @@ export default function LetterViewer({ letter, isUnlocked, onClose }) {
           </Button>
         )}
       </div>
+
+      {/* Unlock overlay */}
+      <AnimatePresence>
+        {showUnlock && !isUnlocked && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-30 flex items-center justify-center bg-background/90 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-card border border-border rounded-2xl p-6 sm:p-8 max-w-lg w-full mx-4 shadow-2xl shadow-primary/10"
+            >
+              <div className="text-center mb-5">
+                <div className="w-12 h-12 mx-auto rounded-full bg-amber-600/10 border border-amber-600/20 flex items-center justify-center mb-3">
+                  <KeyRound className="w-5 h-5 text-amber-400" />
+                </div>
+                <h3 className="font-heading text-lg tracking-wide text-foreground">Decipher {letter.title}</h3>
+                {letter.password_hint && (
+                  <p className="text-xs text-muted-foreground italic mt-2 font-body">
+                    Hint: {letter.password_hint}
+                  </p>
+                )}
+              </div>
+              <WordleGuess
+                password={letter.password}
+                onUnlock={handleUnlock}
+              />
+              <div className="flex justify-center mt-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowUnlock(false)}
+                  className="text-xs text-muted-foreground"
+                >
+                  Continue reading censored version
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <div className="flex items-center justify-center gap-4 px-4 py-3 border-t border-border/50">

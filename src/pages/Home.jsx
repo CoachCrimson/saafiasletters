@@ -3,24 +3,25 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ScrollText, Feather, Shield } from 'lucide-react';
+import { ScrollText, Feather, Shield, LogIn, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/AuthContext';
 import FloatingElements from '@/components/mystery/FloatingElements';
 import LetterCard from '@/components/mystery/LetterCard';
 import LetterViewer from '@/components/mystery/LetterViewer';
-import UnlockModal from '@/components/mystery/UnlockModal';
+import GoogleIcon from '@/components/GoogleIcon';
 
 const SAAFIA_ART = 'https://media.base44.com/images/public/user_6a035c071ec04324a442b3a2/e91ecdce5_Csaafia.png';
 const SAAFIA_EYES = 'https://media.base44.com/images/public/user_6a035c071ec04324a442b3a2/4f81d4bb8_IMG_9782.png';
 const SAAFIA_BUTTERFLY = 'https://media.base44.com/images/public/user_6a035c071ec04324a442b3a2/3df6d9099_xCrimson_SM_tr.png';
 
 export default function Home() {
+  const { isAuthenticated, user, logout } = useAuth();
+
   const [unlockIds, setUnlockIds] = useState(() => {
     const saved = localStorage.getItem('saafia_unlocks');
     return saved ? JSON.parse(saved) : [];
   });
-  const [selectedLetter, setSelectedLetter] = useState(null);
-  const [unlockTarget, setUnlockTarget] = useState(null);
   const [viewingLetter, setViewingLetter] = useState(null);
 
   const queryClient = useQueryClient();
@@ -33,6 +34,7 @@ export default function Home() {
   const { data: serverUnlocks = [] } = useQuery({
     queryKey: ['unlocks'],
     queryFn: () => base44.entities.LetterUnlock.list(),
+    enabled: isAuthenticated,
   });
 
   // Merge server unlocks with local
@@ -47,7 +49,7 @@ export default function Home() {
 
   const unlockMutation = useMutation({
     mutationFn: async (letter) => {
-      // Check if already unlocked on server
+      if (!isAuthenticated) return;
       const existing = serverUnlocks.find(u => u.letter_id === letter.id);
       if (!existing) {
         await base44.entities.LetterUnlock.create({
@@ -65,17 +67,17 @@ export default function Home() {
     const updated = [...new Set([...unlockIds, letter.id])];
     setUnlockIds(updated);
     localStorage.setItem('saafia_unlocks', JSON.stringify(updated));
-    unlockMutation.mutate(letter);
-    // Auto open viewer
-    setTimeout(() => setViewingLetter(letter), 300);
+    if (isAuthenticated) {
+      unlockMutation.mutate(letter);
+    }
   };
 
   const handleCardClick = (letter) => {
-    if (unlockIds.includes(letter.id)) {
-      setViewingLetter(letter);
-    } else {
-      setUnlockTarget(letter);
-    }
+    setViewingLetter(letter);
+  };
+
+  const handleGoogleSignIn = () => {
+    base44.auth.loginWithProvider('google', window.location.href);
   };
 
   const publishedLetters = letters.filter(l => l.is_published);
@@ -83,6 +85,38 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <FloatingElements />
+
+      {/* Auth Bar */}
+      <div className="relative z-20 border-b border-border/30 bg-background/80 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-end gap-3">
+          {isAuthenticated ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5" />
+                {user?.full_name || user?.email || 'Player'}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => logout(true)}
+                className="text-xs text-muted-foreground hover:text-foreground h-7"
+              >
+                <LogOut className="w-3 h-3 mr-1" /> Sign Out
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleGoogleSignIn}
+              className="text-xs h-8 border-border/50 hover:bg-muted/50"
+            >
+              <GoogleIcon className="w-4 h-4 mr-1.5" />
+              Sign in to save progress
+            </Button>
+          )}
+        </div>
+      </div>
 
       {/* Hero Section */}
       <header className="relative z-10">
@@ -192,14 +226,6 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Unlock Modal */}
-      <UnlockModal
-        letter={unlockTarget}
-        open={!!unlockTarget}
-        onOpenChange={(v) => { if (!v) setUnlockTarget(null); }}
-        onUnlock={handleUnlock}
-      />
-
       {/* Letter Viewer */}
       <AnimatePresence>
         {viewingLetter && (
@@ -207,6 +233,7 @@ export default function Home() {
             letter={viewingLetter}
             isUnlocked={unlockIds.includes(viewingLetter.id)}
             onClose={() => setViewingLetter(null)}
+            onUnlock={handleUnlock}
           />
         )}
       </AnimatePresence>
