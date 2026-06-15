@@ -105,6 +105,9 @@ export default function Home() {
 
   const publishedLetters = letters.filter(l => l.is_published);
 
+  // Unsealed count: letters with no password + letters explicitly unlocked
+  const effectiveUnlockCount = publishedLetters.filter(l => isLetterUnlocked(l)).length;
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <FloatingElements />
@@ -182,7 +185,7 @@ export default function Home() {
       </header>
 
       {/* Milestone Badges */}
-      <ProgressBadges unlockCount={unlockIds.length} totalLetters={publishedLetters.length} />
+      <ProgressBadges unlockCount={effectiveUnlockCount} totalLetters={publishedLetters.length} />
 
       {/* Letters Grid */}
       <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pb-8">
@@ -193,7 +196,7 @@ export default function Home() {
           </h3>
           <div className="flex-1 h-px bg-border" />
           <span className="text-xs text-muted-foreground">
-            {unlockIds.length} / {publishedLetters.length} unsealed
+            {effectiveUnlockCount} / {publishedLetters.length} unsealed
           </span>
         </div>
 
@@ -229,7 +232,7 @@ export default function Home() {
       {/* Milestone Stories */}
       <StorySection
         stories={stories}
-        unlockCount={unlockIds.length}
+        unlockCount={effectiveUnlockCount}
         totalLetters={publishedLetters.length}
       />
 
