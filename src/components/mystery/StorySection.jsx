@@ -107,8 +107,24 @@ export default function StorySection({ stories = [], unlockCount = 0, totalLette
                       className="overflow-hidden"
                     >
                       <div className="px-5 pb-5 border-t border-border/50 pt-4">
-                        <div className="prose prose-sm prose-invert max-w-none font-body">
-                          <ReactMarkdown>{story.content || ''}</ReactMarkdown>
+                        <div className="font-body text-sm text-foreground/90">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
+                              h1: ({ children }) => <h1 className="text-lg font-heading font-semibold mb-3 mt-6">{children}</h1>,
+                              h2: ({ children }) => <h2 className="text-base font-heading font-semibold mb-3 mt-5">{children}</h2>,
+                              h3: ({ children }) => <h3 className="text-sm font-heading font-semibold mb-2 mt-4">{children}</h3>,
+                              ul: ({ children }) => <ul className="list-disc ml-5 mb-4 space-y-1">{children}</ul>,
+                              ol: ({ children }) => <ol className="list-decimal ml-5 mb-4 space-y-1">{children}</ol>,
+                              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                              blockquote: ({ children }) => <blockquote className="border-l-2 border-primary/30 pl-4 italic text-muted-foreground mb-4">{children}</blockquote>,
+                              em: ({ children }) => <em className="italic">{children}</em>,
+                              strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                              hr: () => <hr className="my-6 border-border/60" />,
+                            }}
+                          >
+                            {story.content || ''}
+                          </ReactMarkdown>
                         </div>
                       </div>
                     </motion.div>

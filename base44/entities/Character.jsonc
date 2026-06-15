@@ -21,6 +21,46 @@
     "order": {
       "type": "number",
       "description": "Display order"
+    },
+    "race": {
+      "type": "string",
+      "description": "Character race (e.g. Human, Elf, Tiefling)"
+    },
+    "class_name": {
+      "type": "string",
+      "description": "Character class (e.g. Wizard, Rogue, Fighter)"
+    },
+    "alignment": {
+      "type": "string",
+      "description": "Character alignment (e.g. Lawful Good, Chaotic Neutral)"
+    },
+    "gender": {
+      "type": "string",
+      "description": "Character gender"
+    },
+    "eyes": {
+      "type": "string",
+      "description": "Eye color"
+    },
+    "height": {
+      "type": "string",
+      "description": "Character height"
+    },
+    "hair": {
+      "type": "string",
+      "description": "Hair color/style"
+    },
+    "skin": {
+      "type": "string",
+      "description": "Skin tone"
+    },
+    "age": {
+      "type": "string",
+      "description": "Character age"
+    },
+    "weight": {
+      "type": "string",
+      "description": "Character weight"
     }
   },
   "required": [

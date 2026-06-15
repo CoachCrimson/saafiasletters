@@ -1,7 +1,20 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, ChevronRight } from 'lucide-react';
+import { Users, ChevronRight, Swords } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
+const STAT_LABELS = [
+  { key: 'race', label: 'RACE' },
+  { key: 'class_name', label: 'CLASS' },
+  { key: 'alignment', label: 'ALIGNMENT' },
+  { key: 'gender', label: 'GENDER' },
+  { key: 'eyes', label: 'EYES' },
+  { key: 'height', label: 'HEIGHT' },
+  { key: 'hair', label: 'HAIR' },
+  { key: 'skin', label: 'SKIN' },
+  { key: 'age', label: 'AGE' },
+  { key: 'weight', label: 'WEIGHT' },
+];
 
 export default function CharacterInfo({ characters = [] }) {
   const [activeId, setActiveId] = useState(null);
@@ -72,8 +85,40 @@ export default function CharacterInfo({ characters = [] }) {
                       animate={{ height: 'auto', opacity: 1 }}
                       className="overflow-hidden"
                     >
-                      <div className="mt-4 pt-4 border-t border-border/50 prose prose-sm prose-invert max-w-none font-body">
-                        <ReactMarkdown>{char.description}</ReactMarkdown>
+                      {/* Stats Grid */}
+                      {STAT_LABELS.some(s => char[s.key]) && (
+                        <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
+                          {STAT_LABELS.map(stat => {
+                            const value = char[stat.key];
+                            if (!value) return null;
+                            return (
+                              <div key={stat.key} className="flex gap-2 text-xs">
+                                <span className="text-accent font-heading tracking-wider shrink-0">{stat.label}:</span>
+                                <span className="text-foreground font-body">{value}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      <div className="mt-4 pt-4 border-t border-border/50 font-body text-sm text-foreground/90">
+                        <ReactMarkdown
+                          components={{
+                            p: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
+                            h1: ({ children }) => <h1 className="text-lg font-heading font-semibold mb-3 mt-6">{children}</h1>,
+                            h2: ({ children }) => <h2 className="text-base font-heading font-semibold mb-3 mt-5">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-sm font-heading font-semibold mb-2 mt-4">{children}</h3>,
+                            ul: ({ children }) => <ul className="list-disc ml-5 mb-4 space-y-1">{children}</ul>,
+                            ol: ({ children }) => <ol className="list-decimal ml-5 mb-4 space-y-1">{children}</ol>,
+                            li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                            blockquote: ({ children }) => <blockquote className="border-l-2 border-primary/30 pl-4 italic text-muted-foreground mb-4">{children}</blockquote>,
+                            em: ({ children }) => <em className="italic">{children}</em>,
+                            strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                            hr: () => <hr className="my-6 border-border/60" />,
+                          }}
+                        >
+                          {char.description}
+                        </ReactMarkdown>
                       </div>
                     </motion.div>
                   )}

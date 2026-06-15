@@ -15,6 +15,16 @@ export default function CharacterManager({ character, onDone }) {
   const [imageUrl, setImageUrl] = useState(character?.image_url || '');
   const [order, setOrder] = useState(character?.order || 0);
   const [uploading, setUploading] = useState(false);
+  const [race, setRace] = useState(character?.race || '');
+  const [className, setClassName] = useState(character?.class_name || '');
+  const [alignment, setAlignment] = useState(character?.alignment || '');
+  const [gender, setGender] = useState(character?.gender || '');
+  const [eyes, setEyes] = useState(character?.eyes || '');
+  const [height, setHeight] = useState(character?.height || '');
+  const [hair, setHair] = useState(character?.hair || '');
+  const [skin, setSkin] = useState(character?.skin || '');
+  const [age, setAge] = useState(character?.age || '');
+  const [weight, setWeight] = useState(character?.weight || '');
 
   const queryClient = useQueryClient();
 
@@ -41,6 +51,16 @@ export default function CharacterManager({ character, onDone }) {
         description,
         image_url: imageUrl,
         order: Number(order),
+        race,
+        class_name: className,
+        alignment,
+        gender,
+        eyes,
+        height,
+        hair,
+        skin,
+        age,
+        weight,
       };
       if (character) {
         await base44.entities.Character.update(character.id, data);
@@ -95,6 +115,52 @@ export default function CharacterManager({ character, onDone }) {
           {imageUrl && (
             <img src={imageUrl} alt="Preview" className="mt-2 max-h-32 rounded border border-border object-contain" />
           )}
+        </div>
+
+        <div className="border-t border-border/50 pt-4 mt-4">
+          <p className="font-heading text-xs uppercase tracking-[0.15em] text-accent mb-3">Character Stats</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="race">Race</Label>
+              <Input id="race" value={race} onChange={(e) => setRace(e.target.value)} placeholder="e.g. Human" />
+            </div>
+            <div>
+              <Label htmlFor="class_name">Class</Label>
+              <Input id="class_name" value={className} onChange={(e) => setClassName(e.target.value)} placeholder="e.g. Wizard" />
+            </div>
+            <div>
+              <Label htmlFor="alignment">Alignment</Label>
+              <Input id="alignment" value={alignment} onChange={(e) => setAlignment(e.target.value)} placeholder="e.g. Lawful Good" />
+            </div>
+            <div>
+              <Label htmlFor="gender">Gender</Label>
+              <Input id="gender" value={gender} onChange={(e) => setGender(e.target.value)} placeholder="e.g. Female" />
+            </div>
+            <div>
+              <Label htmlFor="eyes">Eyes</Label>
+              <Input id="eyes" value={eyes} onChange={(e) => setEyes(e.target.value)} placeholder="e.g. Amber" />
+            </div>
+            <div>
+              <Label htmlFor="height">Height</Label>
+              <Input id="height" value={height} onChange={(e) => setHeight(e.target.value)} placeholder='e.g. 5&apos;7"' />
+            </div>
+            <div>
+              <Label htmlFor="hair">Hair</Label>
+              <Input id="hair" value={hair} onChange={(e) => setHair(e.target.value)} placeholder="e.g. Jet Black" />
+            </div>
+            <div>
+              <Label htmlFor="skin">Skin</Label>
+              <Input id="skin" value={skin} onChange={(e) => setSkin(e.target.value)} placeholder="e.g. Olive" />
+            </div>
+            <div>
+              <Label htmlFor="age">Age</Label>
+              <Input id="age" value={age} onChange={(e) => setAge(e.target.value)} placeholder="e.g. 28" />
+            </div>
+            <div>
+              <Label htmlFor="weight">Weight</Label>
+              <Input id="weight" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="e.g. 145 lbs" />
+            </div>
+          </div>
         </div>
 
         <div>
