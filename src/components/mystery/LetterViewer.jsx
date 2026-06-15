@@ -104,8 +104,10 @@ export default function LetterViewer({ letter, isUnlocked, onClose, onUnlock }) 
               <img
                 src={pages[currentPage]}
                 alt={`Page ${currentPage + 1}`}
-                className="max-h-[calc(100vh-180px)] max-w-full object-contain rounded-lg shadow-2xl shadow-primary/5 cursor-zoom-in"
-                onClick={() => setZoomOpen(true)}
+                className={`max-h-[calc(100vh-180px)] max-w-full object-contain rounded-lg shadow-2xl cursor-zoom-in ${
+                  !isUnlocked ? 'blur-lg brightness-[0.35] sepia-[0.3] pointer-events-none select-none' : 'shadow-primary/5'
+                }`}
+                onClick={() => isUnlocked && setZoomOpen(true)}
               />
             ) : (
               <div className="w-64 h-96 bg-muted rounded-lg flex items-center justify-center">

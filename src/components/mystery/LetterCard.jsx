@@ -23,7 +23,7 @@ export default function LetterCard({ letter, isUnlocked, onClick }) {
               src={letter.censored_pages[0]}
               alt={letter.title}
               className={`w-full h-full object-contain transition-all duration-700 ${
-                isUnlocked ? '' : 'blur-xl brightness-50 scale-110'
+                isUnlocked ? '' : 'blur-lg brightness-[0.35] scale-110 sepia-[0.3]'
               }`}
             />
           ) : (
@@ -32,22 +32,29 @@ export default function LetterCard({ letter, isUnlocked, onClick }) {
             </div>
           )}
 
-          {/* Overlay for locked */}
-          {!isUnlocked && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm">
+          {/* Subtle lock indicator for sealed cards */}
+          {!isUnlocked && letter.censored_pages?.[0] && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
               <motion.div
-                animate={{ y: [0, -5, 0] }}
+                animate={{ y: [0, -4, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
-                <Lock className="w-10 h-10 text-muted-foreground/60 mb-2" />
+                <Lock className="w-8 h-8 text-foreground/25 drop-shadow-lg" />
               </motion.div>
+            </div>
+          )}
+
+          {/* Fallback lock for cards with no image */}
+          {!isUnlocked && !letter.censored_pages?.[0] && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/40">
+              <Lock className="w-10 h-10 text-muted-foreground/50 mb-2" />
               <p className="text-xs text-muted-foreground font-heading tracking-wider uppercase">Sealed</p>
             </div>
           )}
 
           {/* Unlocked badge */}
           {isUnlocked && (
-            <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground rounded-full p-1.5">
+            <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground rounded-full p-1.5 shadow-lg">
               <Unlock className="w-3.5 h-3.5" />
             </div>
           )}
