@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Pencil, Trash2, Eye, EyeOff, ArrowLeft, ScrollText, Shield, BookOpen, Users, Image, Sparkles } from 'lucide-react';
+import { Plus, Pencil, Trash2, ArrowLeft, ScrollText, Shield, BookOpen, Users, Image, Sparkles, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import DMToolsGate from '@/components/dm/DMToolsGate';
@@ -12,12 +12,14 @@ import LetterManager from '@/components/dm/LetterManager';
 import StoryManager from '@/components/dm/StoryManager';
 import CharacterManager from '@/components/dm/CharacterManager';
 import ArtManager from '@/components/dm/ArtManager';
+import MilestoneManager from '@/components/dm/MilestoneManager';
 
 const TABS = [
   { key: 'letters', label: 'Letters', icon: ScrollText },
   { key: 'stories', label: 'Stories', icon: BookOpen },
   { key: 'characters', label: 'Characters', icon: Users },
   { key: 'art', label: 'Art', icon: Image },
+  { key: 'milestones', label: 'Milestones', icon: Trophy },
 ];
 
 export default function DMTools() {
@@ -53,8 +55,13 @@ function DMDashboard() {
     queryFn: () => base44.entities.Art.list('order'),
   });
 
-  const currentData = tab === 'letters' ? letters : tab === 'stories' ? stories : tab === 'characters' ? characters : art;
-  const currentLoading = tab === 'letters' ? lettersLoading : tab === 'stories' ? storiesLoading : tab === 'characters' ? charsLoading : artLoading;
+  const { data: milestones = [], isLoading: milestonesLoading } = useQuery({
+    queryKey: ['milestones'],
+    queryFn: () => base44.entities.Milestone.list('order'),
+  });
+
+  const currentData = tab === 'letters' ? letters : tab === 'stories' ? stories : tab === 'characters' ? characters : tab === 'art' ? art : milestones;
+  const currentLoading = tab === 'letters' ? lettersLoading : tab === 'stories' ? storiesLoading : tab === 'characters' ? charsLoading : tab === 'art' ? artLoading : milestonesLoading;
 
   const deleteLetterMutation = useMutation({
     mutationFn: (id) => base44.entities.Letter.delete(id),
@@ -72,12 +79,17 @@ function DMDashboard() {
     mutationFn: (id) => base44.entities.Art.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['art'] }); toast.success('Deleted'); },
   });
+  const deleteMilestoneMutation = useMutation({
+    mutationFn: (id) => base44.entities.Milestone.delete(id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['milestones'] }); toast.success('Deleted'); },
+  });
 
   const getDeleteMutation = () => {
     switch (tab) {
       case 'stories': return deleteStoryMutation;
       case 'characters': return deleteCharMutation;
       case 'art': return deleteArtMutation;
+      case 'milestones': return deleteMilestoneMutation;
       default: return deleteLetterMutation;
     }
   };
@@ -90,6 +102,7 @@ function DMDashboard() {
         {tab === 'characters' && <CharacterManager character={editing === 'new' ? null : editing} onDone={() => setEditing(null)} />}
         {tab === 'art' && <ArtManager art={editing === 'new' ? null : editing} onDone={() => setEditing(null)} />}
         {tab === 'letters' && <LetterManager letter={editing === 'new' ? null : editing} onDone={() => setEditing(null)} />}
+        {tab === 'milestones' && <MilestoneManager milestone={editing === 'new' ? null : editing} onDone={() => setEditing(null)} />}
       </div>
     );
   }
@@ -184,6 +197,11 @@ function DMDashboard() {
                     )}
                     {tab === 'art' && (
                       <p className="text-xs text-muted-foreground mt-1">{item.character_name || 'No character'}</p>
+                    )}
+                    {tab === 'milestones' && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        After {item.count} letter{item.count !== 1 ? 's' : ''} — Icon: {item.icon_name}
+                      </p>
                     )}
                   </div>
 

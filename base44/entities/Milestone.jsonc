@@ -1,0 +1,43 @@
+{
+  "name": "Milestone",
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "number",
+      "description": "Number of letters needed to earn this milestone"
+    },
+    "label": {
+      "type": "string",
+      "description": "Milestone label displayed to players"
+    },
+    "icon_name": {
+      "type": "string",
+      "description": "Lucide icon name (Key, Eye, Feather, Shield, Star, Crown, ScrollText, Sparkles, Heart, Flame, Moon, Sun, Gem, Sword, BookOpen, Trophy)"
+    },
+    "color": {
+      "type": "string",
+      "description": "Tailwind color class for icon (e.g. text-amber-400)"
+    },
+    "bg": {
+      "type": "string",
+      "description": "Tailwind bg class (e.g. bg-amber-400/10)"
+    },
+    "border": {
+      "type": "string",
+      "description": "Tailwind border class (e.g. border-amber-400/30)"
+    },
+    "order": {
+      "type": "number",
+      "description": "Display order",
+      "default": 0
+    }
+  },
+  "required": [
+    "count",
+    "label",
+    "icon_name",
+    "color",
+    "bg",
+    "border"
+  ]
+}

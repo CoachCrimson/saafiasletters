@@ -1,17 +1,22 @@
 import { motion } from 'framer-motion';
-import { Shield, Feather, Eye, Star, Crown, Key } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { Star, Key, Eye, Feather, Shield, Crown, ScrollText, Sparkles, Heart, Flame, Moon, Sun, Gem, Sword, BookOpen, Trophy } from 'lucide-react';
 
-const MILESTONES = [
-  { count: 1, icon: Key, label: 'First Light', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/30' },
-  { count: 2, icon: Eye, label: 'Watcher', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/30' },
-  { count: 3, icon: Feather, label: 'Scribe', color: 'text-sky-400', bg: 'bg-sky-400/10', border: 'border-sky-400/30' },
-  { count: 5, icon: Shield, label: 'Guardian', color: 'text-violet-400', bg: 'bg-violet-400/10', border: 'border-violet-400/30' },
-  { count: 7, icon: Star, label: 'Truthseeker', color: 'text-rose-400', bg: 'bg-rose-400/10', border: 'border-rose-400/30' },
-  { count: 10, icon: Crown, label: 'Heir of Blarod', color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/40' },
-];
+const ICON_MAP = {
+  Key, Eye, Feather, Shield, Star, Crown, ScrollText, Sparkles,
+  Heart, Flame, Moon, Sun, Gem, Sword, BookOpen, Trophy,
+};
 
 export default function ProgressBadges({ unlockCount = 0, totalLetters = 0 }) {
+  const { data: milestones = [], isLoading } = useQuery({
+    queryKey: ['milestones'],
+    queryFn: () => base44.entities.Milestone.list('order'),
+  });
+
   if (totalLetters === 0) return null;
+  if (isLoading) return null;
+  if (milestones.length === 0) return null;
 
   return (
     <section className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 pb-12">
@@ -27,13 +32,13 @@ export default function ProgressBadges({ unlockCount = 0, totalLetters = 0 }) {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-        {MILESTONES.map((milestone, i) => {
+        {milestones.map((milestone, i) => {
           const earned = unlockCount >= milestone.count;
-          const Icon = milestone.icon;
+          const IconComponent = ICON_MAP[milestone.icon_name] || Star;
 
           return (
             <motion.div
-              key={milestone.count}
+              key={milestone.id}
               initial={{ opacity: 0, scale: 0.5 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -55,7 +60,7 @@ export default function ProgressBadges({ unlockCount = 0, totalLetters = 0 }) {
                     : 'bg-muted/30 border-border/30'
                 }`}
               >
-                <Icon className={`w-6 h-6 sm:w-7 sm:h-7 transition-all duration-500 ${
+                <IconComponent className={`w-6 h-6 sm:w-7 sm:h-7 transition-all duration-500 ${
                   earned ? milestone.color : 'text-muted-foreground/30'
                 }`} />
               </motion.div>
