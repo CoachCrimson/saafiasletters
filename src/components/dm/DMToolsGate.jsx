@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Shield, KeyRound } from 'lucide-react';
+import { Shield, KeyRound, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const DM_PASSWORD = 'nethdria_dm_2024';
 
@@ -51,6 +52,12 @@ export default function DMToolsGate({ children }) {
             Enter
           </Button>
         </form>
+        <div className="text-center mt-6">
+          <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Return to Home
+          </Link>
+        </div>
       </div>
     </div>
   );

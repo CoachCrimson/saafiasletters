@@ -1,8 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 export default function AuthLayout({ icon: Icon, title, subtitle, footer, children }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <Link to="/" className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors">
+        <ArrowLeft className="w-3.5 h-3.5" />
+        Return to Home
+      </Link>
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary mb-4">
