@@ -12,6 +12,7 @@ import LetterViewer from '@/components/mystery/LetterViewer';
 import StorySection from '@/components/mystery/StorySection';
 import CharacterInfo from '@/components/mystery/CharacterInfo';
 import ArtGallery from '@/components/mystery/ArtGallery';
+import ProgressBadges from '@/components/mystery/ProgressBadges';
 import GoogleIcon from '@/components/GoogleIcon';
 
 const SAAFIA_EYES = 'https://media.base44.com/images/public/user_6a035c071ec04324a442b3a2/4f81d4bb8_IMG_9782.png';
@@ -175,8 +176,11 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Milestone Badges */}
+      <ProgressBadges unlockCount={unlockIds.length} totalLetters={publishedLetters.length} />
+
       {/* Letters Grid */}
-      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pb-16">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pb-8">
         <div className="flex items-center gap-3 mb-8">
           <ScrollText className="w-5 h-5 text-primary" />
           <h3 className="font-heading text-sm uppercase tracking-[0.2em] text-foreground">
