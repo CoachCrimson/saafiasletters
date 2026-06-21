@@ -1,14 +1,14 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const YOUTUBE_ID = 'E_Q2SjUELvA';
-const SRC = `https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_ID}&controls=0&showinfo=0&modestbranding=1&enablejsapi=1`;
+const SRC = `https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_ID}&controls=0&showinfo=0&modestbranding=1&mute=1&enablejsapi=1`;
 
 export default function BackgroundMusic() {
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
   const [volume, setVolume] = useState(50);
   const [showSlider, setShowSlider] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [playerReady, setPlayerReady] = useState(false);
   const iframeRef = useRef(null);
   const volumeRef = useRef(50);
 
@@ -21,23 +21,22 @@ export default function BackgroundMusic() {
     );
   }, []);
 
-  const handleReady = useCallback(() => {
-    if (ready) return;
-    setReady(true);
-    postCommand('setVolume', [50]);
-  }, [ready, postCommand]);
-
-  // Listen for the YouTube iframe ready event
-  useState(() => {
+  // Listen for YouTube iframe ready, then unmute and set volume
+  useEffect(() => {
     const handler = (e) => {
       try {
         const data = JSON.parse(e.data);
-        if (data.event === 'onReady') handleReady();
+        if (data.event === 'onReady' && !playerReady) {
+          setPlayerReady(true);
+          postCommand('unMute');
+          postCommand('setVolume', [50]);
+          setMuted(false);
+        }
       } catch {}
     };
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
-  });
+  }, [playerReady, postCommand]);
 
   const toggleMute = () => {
     if (muted) {
