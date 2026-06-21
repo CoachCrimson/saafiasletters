@@ -2,15 +2,15 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const YOUTUBE_ID = 'E_Q2SjUELvA';
-const SRC = `https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_ID}&controls=0&showinfo=0&modestbranding=1&mute=1&enablejsapi=1`;
+const SRC = `https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1&loop=1&playlist=${YOUTUBE_ID}&controls=0&showinfo=0&modestbranding=1&enablejsapi=1`;
 
 export default function BackgroundMusic() {
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [volume, setVolume] = useState(50);
   const [showSlider, setShowSlider] = useState(false);
-  const [playerReady, setPlayerReady] = useState(false);
   const iframeRef = useRef(null);
   const volumeRef = useRef(50);
+  const initializedRef = useRef(false);
 
   const postCommand = useCallback((func, args = []) => {
     const iframe = iframeRef.current;
@@ -21,22 +21,20 @@ export default function BackgroundMusic() {
     );
   }, []);
 
-  // Listen for YouTube iframe ready, then unmute and set volume
+  // Set volume to 50% once player is ready
   useEffect(() => {
     const handler = (e) => {
       try {
         const data = JSON.parse(e.data);
-        if (data.event === 'onReady' && !playerReady) {
-          setPlayerReady(true);
-          postCommand('unMute');
+        if (data.event === 'onReady' && !initializedRef.current) {
+          initializedRef.current = true;
           postCommand('setVolume', [50]);
-          setMuted(false);
         }
       } catch {}
     };
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
-  }, [playerReady, postCommand]);
+  }, [postCommand]);
 
   const toggleMute = () => {
     if (muted) {
@@ -52,11 +50,16 @@ export default function BackgroundMusic() {
     const v = Number(e.target.value);
     volumeRef.current = v;
     setVolume(v);
-    if (muted) {
-      postCommand('unMute');
-      setMuted(false);
+    if (v === 0) {
+      postCommand('mute');
+      setMuted(true);
+    } else {
+      if (muted) {
+        postCommand('unMute');
+        setMuted(false);
+      }
+      postCommand('setVolume', [v]);
     }
-    postCommand('setVolume', [v]);
   };
 
   return (
